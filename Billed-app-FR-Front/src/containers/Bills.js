@@ -20,11 +20,15 @@ export default class {
     this.onNavigate(ROUTES_PATH['NewBill'])
   }
 
+  /**
+   * I changed the $(...).modal by a condition like the Dashboard function case
+   */
   handleClickIconEye = (icon) => {
     const billUrl = icon.getAttribute("data-bill-url")
     const imgWidth = Math.floor($('#modaleFile').width() * 0.5)
     $('#modaleFile').find(".modal-body").html(`<div style='text-align: center;' class="bill-proof-container"><img width=${imgWidth} src=${billUrl} alt="Bill" /></div>`)
-    $('#modaleFile').modal('show')
+    //$('#modaleFile').modal('show')
+    if (typeof $('#modaleFile').modal === 'function') $('#modaleFile').modal('show')
   }
 
   getBills = () => {

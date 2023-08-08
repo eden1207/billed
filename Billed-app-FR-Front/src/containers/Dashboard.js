@@ -154,35 +154,22 @@ export default class {
      * creating multiple calls each time we click on a ticket. To fix this problem, we attribute
      * the function only for the tickets of the openning list and only during the handleShowTickets()
      */
+    let status = "";
     if(this.index === 1) {
-      for(let i=0; i<bills.length; i++) {
-        if(bills[i].status === "pending") {
-          let newBills = [];
-          newBills.push(bills[i])
-          newBills.forEach(bill => {
-            $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
-          })
-        }
-      }
+      status = "pending";
     } else if(this.index === 2) {
-      for(let i=0; i<bills.length; i++) {
-        if(bills[i].status === "accepted") {
-          let newBills = [];
-          newBills.push(bills[i])
-          newBills.forEach(bill => {
-            $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
-          })
-        }
-      }
+      status = "accepted";
     } else if(this.index === 3) {
-      for(let i=0; i<bills.length; i++) {
-        if(bills[i].status === "refused") {
-          let newBills = [];
-          newBills.push(bills[i])
-          newBills.forEach(bill => {
-            $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
-          })
-        }
+      status = "refused";
+    }
+
+    for(let i=0; i<bills.length; i++) {
+      if(bills[i].status === status) {
+        let newBills = [];
+        newBills.push(bills[i])
+        newBills.forEach(bill => {
+          $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
+        })
       }
     }
 

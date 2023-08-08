@@ -1,6 +1,22 @@
 import { ROUTES_PATH } from '../constants/routes.js'
 import Logout from "./Logout.js"
 
+/**
+ * I have created this function to select the good file format
+ * @param {string} fileName 
+ * @returns {boolean}
+ */
+export const getIsGoodFormat = (fileName) => {
+  let isGoodFormat = false
+  const fileNameArray = fileName.split('.')
+  const fileNameFormat = fileNameArray[1].toLowerCase()
+  if(fileNameFormat === 'jpeg' || fileNameFormat === 'jpg' || fileNameFormat === 'png') {
+    isGoodFormat = true
+    return isGoodFormat
+  }
+  return isGoodFormat
+}
+
 export default class NewBill {
   constructor({ document, onNavigate, store, localStorage }) {
     this.document = document
@@ -20,11 +36,8 @@ export default class NewBill {
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
-
-    const fileNameArray = fileName.split('.')
-    const fileNameFormat = fileNameArray[1].toLowerCase()
-    console.log(fileNameFormat)
-    if(fileNameFormat === 'jpeg' || fileNameFormat === 'jpg' || fileNameFormat === 'png') {
+    const isGoodFormat = getIsGoodFormat(fileName)
+    if(isGoodFormat) {
       const formData = new FormData()
       const email = JSON.parse(localStorage.getItem("user")).email
       formData.append('file', file)

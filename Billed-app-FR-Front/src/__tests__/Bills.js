@@ -162,8 +162,6 @@ describe("Given I am a user connected as an employee", () => {
       document.body.append(root)
       router()
       window.onNavigate(ROUTES_PATH.Bills)
-      //const billsTab = await screen.getByTestId('tbody')
-      //expect(billsTab).toBeTruthy()
       await waitFor(() => screen.getByText("Mes notes de frais"))
       expect(screen.getByTestId("tbody")).toBeTruthy()
     })

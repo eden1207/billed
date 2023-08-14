@@ -33,7 +33,7 @@ describe("Given I am connected as an employee", () => {
       await waitFor(() => screen.getByTestId('icon-window'))
       const windowIcon = screen.getByTestId('icon-window')
       //I added this missing expression
-      expect(windowIcon).toBeTruthy()
+      await expect(windowIcon.classList.contains("active-icon")).toBe(true);
     })
     test("Then bills should be ordered from earliest to latest", () => {
       document.body.innerHTML = BillsUI({ data: bills })
@@ -149,6 +149,8 @@ describe('Given I am connected as an Employee', () => {
 
 /**
  * Test of the GET method
+ * The first test checks if I am able to get the bills.
+ * Then I am checking if I receive a 404 and 500 error when the request is rejected.
  */
 describe("Given I am a user connected as an employee", () => {
   describe("When I navigate to Bills", () => {

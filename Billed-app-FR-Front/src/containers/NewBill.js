@@ -1,21 +1,6 @@
 import { ROUTES_PATH } from '../constants/routes.js'
 import Logout from "./Logout.js"
 
-/**
- * I have created this function to select the good file format
- * @param {string} fileName 
- * @returns {boolean}
- */
-export const getIsGoodFormat = (fileName) => {
-  let isGoodFormat = false
-  const fileNameArray = fileName.split('.')
-  const fileNameFormat = fileNameArray[1].toLowerCase()
-  if(fileNameFormat === 'jpeg' || fileNameFormat === 'jpg' || fileNameFormat === 'png') {
-    isGoodFormat = true
-    return isGoodFormat
-  }
-  return isGoodFormat
-}
 
 export default class NewBill {
   constructor({ document, onNavigate, store, localStorage }) {
@@ -31,18 +16,40 @@ export default class NewBill {
     this.billId = null
     new Logout({ document, localStorage, onNavigate })
   }
+  /**
+   * I have created this function to select the good file format
+   * @param {Object} target
+   * @returns {boolean}
+   * This function also displays a message under the input
+   */
+  handleFileType({target}){
+    const file = target.files[0];
+    const fileName = file.name;
+    const fileNameArray = fileName.split('.')
+    const fileNameFormat = fileNameArray[1]?.toLowerCase()
+    target.setCustomValidity("")
+    if(fileNameFormat === 'jpeg' || fileNameFormat === 'jpg' || fileNameFormat === 'png') {
+      return true
+    }
+    target.setCustomValidity("Formats acceptés : jpg, jpeg et png")
+    target.reportValidity()
+    // To avoid the title to be displayed on the input
+    target.value = null
+    return false
+  }
   handleChangeFile = e => {
     e.preventDefault()
-    const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
-    const filePath = e.target.value.split(/\\/g)
-    const fileName = filePath[filePath.length-1]
-    const isGoodFormat = getIsGoodFormat(fileName)
-    if(isGoodFormat) {
+    /** I have changed this line by the call of a new function handleFileType */
+    //const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
+    const isFileTypeValid = this.handleFileType(e)
+    /** I have added a condition to execute the code only if the file format is correct */
+    if(isFileTypeValid) {
+      const filePath = e.target.value.split(/\\/g)
+      const fileName = filePath[filePath.length-1]
       const formData = new FormData()
       const email = JSON.parse(localStorage.getItem("user")).email
-      formData.append('file', file)
+      formData.append('file', e.target.files[0])
       formData.append('email', email)
-
       this.store
         .bills()
         .create({
@@ -52,13 +59,10 @@ export default class NewBill {
           }
         })
         .then(({fileUrl, key}) => {
-          console.log(fileUrl)
           this.billId = key
           this.fileUrl = fileUrl
           this.fileName = fileName
         }).catch(error => console.error(error))
-    } else{
-      alert('Attention, format de fichier incorrect')
     }
   }
   handleSubmit = e => {

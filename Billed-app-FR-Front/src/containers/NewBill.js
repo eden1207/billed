@@ -26,6 +26,7 @@ export default class NewBill {
     const file = target.files[0];
     const fileName = file.name;
     const fileNameArray = fileName.split('.')
+    // ? is used to send a default value to avoid error message on Jest test
     const fileNameFormat = fileNameArray[1]?.toLowerCase()
     target.setCustomValidity("")
     if(fileNameFormat === 'jpeg' || fileNameFormat === 'jpg' || fileNameFormat === 'png') {
